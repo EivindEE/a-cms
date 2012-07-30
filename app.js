@@ -37,6 +37,15 @@ app.get('/', function(req, res){
   });
 });
 
+app.get('/blog', function(req, res){
+  res.render('blogposts', {
+    title: 'a-cms blog',
+    lang: 'en',
+    header: "Welcome to the a-cms blog. It is super effective at teaching you how to use a-cms",
+    blogposts: [{title:"My first blogpost", content: "This is my first blogpost and I am very proud"},{title: "How much i love cats", content: "I like cats very much, they are super effective"}, {title: "I might like dogs the best", content: "Dogs are super awesome, they have paws and smell very well. They like people, unlike those darn cats..."}]
+  });
+});
+
 var port = process.env.PORT || 3300;
 app.listen(port);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+console.log('Express server listening on port %d in %s mode', port, app.settings.env);

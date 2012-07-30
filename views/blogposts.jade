@@ -1,0 +1,13 @@
+!!! 5
+html(lang= lang)
+    head
+        title= title
+    body
+        div.page-container
+            h1=header
+            ul.posts
+                for post in blogposts
+                    li 
+                        h2.blog-title=post.title
+                        div.blog-text=post.content
+                        
