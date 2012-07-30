@@ -1,16 +1,41 @@
 
-var app = require('express').createServer()
-, mongoose = require('mongoose')
-, db = mongoose.connect('mongodb://localhost/nodeblog')
-, Schema = mongoose.Schema
-, ObjectId = Schema.ObjectId;
+/**
+ * Module dependencies.
+ */
 
-//Setup express
+var express = require('express')
+,	app = module.exports = express.createServer()
+,	mongoose = require('mongoose')
+,	db = mongoose.connect('mongodb://localhost/nodeblog')
+,	Schema = mongoose.Schema
+,	ObjectId = Schema.ObjectId;
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
+// Configuration
 
-//Define a scema
+app.configure(function () {
+    'use strict';
+	app.set('views', __dirname + '/views');
+	app.set('view engine', 'jade');
+	app.use(express.logger('dev'));
+	app.use(express.bodyParser());
+	app.use(express.methodOverride());
+	app.use(express.cookieParser());
+	app.use(express.session({ secret: 'your secret goes here' }));
+	app.use(app.router);
+	app.use(express.static(__dirname + '/public'));
+});
+
+app.configure('development', function () {
+    'use strict';
+	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
+app.configure('production', function () {
+    'use strict';
+	app.use(express.errorHandler());
+});
+
+//Define a schema
 var page = new Schema({
     author	: ObjectId
   , title	: String
@@ -21,6 +46,8 @@ var page = new Schema({
 });
 
 var pages = db.model('pages', page);
+
+// Database Functions
 
 function createNewPage(){
 	var instance = new pages();
@@ -49,16 +76,26 @@ function getTitleBySlug($slug, $cb){
 	});	
 }
 
+
+// Routes
+
 app.get('/',function(req, res){
 	getTitleBySlug('myfirstpost', function(data) { 
-		console.log(data);
 		res.render('index', {data: data});
 	})
 });
 
+app.get('/blog', function (req, res) {
+    'use strict';
+	res.render('blogposts', {
+		title: 'a-cms blog',
+		lang: 'en',
+		header: "Welcome to the a-cms blog. It is super effective at teaching you how to use a-cms",
+		blogposts: [{title: "My first blogpost", content: "This is my first blogpost and I am very proud"}, {title: "How much i love cats", content: "I like cats very much, they are super effective"}, {title: "I might like dogs the best", content: "Dogs are super awesome, they have paws and smell very well. They like people, unlike those darn cats..."}]
+	});
+});
 
+var port = process.env.PORT || 3300;
+app.listen(port);
+console.log('Express server listening on port %d in %s mode', port, app.settings.env);
 
-
-app.listen(8000);
-
-console.log('Listening on http://127.0.0.1:8000');
