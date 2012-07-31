@@ -93,7 +93,15 @@ function createNewPage(){
 
 
 function getTitleBySlug($slug, $cb){
-	pages.find({slug: $slug}, function(err, data) {
+	page.find({slug: $slug}, function(err, data) {
+	  	data.forEach(function(elem, index, array){
+		  	$cb(elem); 
+	  	});
+	});	
+}
+
+function getPostBySlug($slug, $cb){
+	post.find({slug: $slug}, function(err, data) {
 	  	data.forEach(function(elem, index, array){
 		  	$cb(elem); 
 	  	});
@@ -193,13 +201,17 @@ app.get('/admin/posts',function(req, res){
 });
 
 app.get('/blog', function (req, res) {
-    'use strict';
-	res.render('blogposts', {
-		title: 'a-cms blog',
-		lang: 'en',
-		header: "Welcome to the a-cms blog. It is super effective at teaching you how to use a-cms",
-		blogposts: [{title: "My first blogpost", content: "This is my first blogpost and I am very proud"}, {title: "How much i love cats", content: "I like cats very much, they are super effective"}, {title: "I might like dogs the best", content: "Dogs are super awesome, they have paws and smell very well. They like people, unlike those darn cats..."}]
+    getAllPosts(function(data){
+		res.render('blog', {page: {title: "a-cms blog", header: "Welcome to the a-cms blog. It is super effective at teaching you how to use a-cms" }, blogposts: data});
 	});
+});
+
+//Single Post
+app.get('/blog/:slug', function(req, res){
+	getPostBySlug(req.params.slug, function(data){
+		res.render('singlepost', {page: data});	
+	});
+	
 });
 
 var port = process.env.PORT || 3300;
