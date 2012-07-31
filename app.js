@@ -212,7 +212,7 @@ app.get('/blog/:slug', function(req, res){
 	
 });
 
-var port = process.env.PORT || 3300;
+var port = process.env.PORT || 20095;
 app.listen(port);
 console.log('Express server listening on port %d in %s mode', port, app.settings.env);
 
