@@ -7,5 +7,5 @@
     "jade": ">= 0.27.0",
     "mongoose": ">= 2.7.2"
   },
-  "engine": "node 0.6.17"
+  "engine": "node 0.4.9"
 }
