@@ -4,7 +4,8 @@ include header
 		.span12
 			- if (typeof(locals.query.warning) != 'undefined')
 				.alert.alert-warning 
-					strong= locals.query.warning
+					strong= locals.query.warning 
+					a( href="#{locals.host}/blog/#{post.slug}")  View Post
 			h1= page.title
 			p= page.content
 			form(action="#{locals.host}/admin/posts/edit/save", method="post")
