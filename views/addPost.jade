@@ -1,20 +1,20 @@
 include header
-	.container
-		.row
-			.span12
-				h1= page.title
-				p= page.content
-				form(action="/", method="post")
-					input(type="hidden")(value="writetodb")(name="action")
-					label Title
-					input(type="text")(name="title")
-					
-					label Slug
-					input(type="text")(name="slug")
-					
-					br
-					label Content
-					textarea(name="content")
-					br
-	
-					input.btn(type="submit")
+.container
+	.row
+		.span12
+			h1= page.title
+			p= page.content
+			form(action="")
+				input(type="hidden")(value="writetodb")(name="action")
+				label Title
+				input(type="text")(name="title")
+				
+				label Slug
+				input(type="text")(name="slug")
+				
+				br
+				label Content
+				textarea(name="content")
+				br
+
+				input.btn(type="submit")

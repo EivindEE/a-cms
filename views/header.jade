@@ -3,4 +3,21 @@ html
 	head
 		title= page.title
 		link(rel='stylesheet', href='/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/css/app.css')
+		script(src="http://code.jquery.com/jquery-latest.js")
+		script(type="text/javascript", src="/js/bootstrap.min.js")
 	body
+		.navbar.navbar-fixed-top
+			.navbar-inner
+				.container
+					a.brand(href=locals.host) a-cms
+					.nav-collapse
+						ul.nav
+							li.dropdown
+								a.dropdown-toggle(href="#", data-toggle="dropdown") Posts
+									b.carret
+								ul.dropdown-menu
+									li
+										a(href="#{locals.host}/admin/posts") Post List
+										a(href="#{locals.host}/admin/posts?action=addnew") Add New
+									

@@ -23,6 +23,7 @@ app.configure(function () {
 	});
 	app.use(function(req, res, next){
 		res.locals.host = 'http://' + req.headers.host;
+		res.locals.query = req.query;
 		next();
 	});
 	app.use(express.bodyParser());
