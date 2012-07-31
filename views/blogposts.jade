@@ -1,10 +1,6 @@
-!!! 5
-html(lang= lang)
-    head
-        title= title
-    body
+include header
         div.page-container
-            h1=header
+            h1=page.title
             ul.posts
                 for post in blogposts
                     li 

@@ -35,22 +35,35 @@ app.configure('production', function () {
 	app.use(express.errorHandler());
 });
 
-//Define a schema
-var page = new Schema({
+//Define schemas
+var pages = new Schema({
     author	: ObjectId
   , title	: String
   , slug	: String
   , content	: String
+  , type	: String
   , buf		: Buffer	//Don't know how this works
   , date	: Date	//Don't know how this works
 });
 
-var pages = db.model('pages', page);
+var page = db.model('pages', pages);
+
+var posts = new Schema({
+    author	: ObjectId
+  , title	: String
+  , slug	: String
+  , content	: String
+  , type	: String
+  , buf		: Buffer	//Don't know how this works
+  , date	: Date	//Don't know how this works
+});
+
+var post = db.model('post', posts);
 
 // Database Functions
 
 function createNewPage(){
-	var instance = new pages();
+	var instance = new page();
 	instance.title = 'This is a post';
 	instance.slug = "myfirstpost";
 	instance.content = "Proin vestibulum. Ut ligula. Nullam sed dolor id odio volutpat pulvinar. Integer a leo. In et eros at neque pretium sagittis. Sed sodales lorem a ipsum suscipit gravida. Ut fringilla placerat arcu. Phasellus imperdiet. Mauris ac justo et turpis pharetra vulputate";
@@ -76,13 +89,58 @@ function getTitleBySlug($slug, $cb){
 	});	
 }
 
+function getAllPosts($cb){
+	post.find({type: "post"}, function(err, data) {
+		if(!err){
+			$cb(data);  
+		}	
+		else{
+			console.log(err);
+		}
+	});	
+}
+
 
 // Routes
 
 app.get('/',function(req, res){
 	getTitleBySlug('myfirstpost', function(data) { 
-		res.render('index', {data: data});
+		res.render('index', {page: data});
 	})
+});
+
+app.get('/admin/posts',function(req, res){
+	console.log(req.query);
+	if(req.query.action === "addnew"){
+		res.render('addPost', {page: {title: "Add New Post", content: "Add a new post"}});	
+	} else if(req.query.action === "writetodb"){
+		if (req.query.title !== ""){
+			var instance = new post();
+			instance.title = req.query.title;
+			instance.slug = req.query.slug;
+			instance.content = req.query.content;
+			instance.type = "post";
+			instance.save(function (err) {
+				if (!err){
+					res.render('addPost', {page: {title: "Post Added", content: "Add a new post"}});	
+				}
+				else{
+					res.render('addPost', {page: {title: "Error", content: "Could not add post"}});
+				}
+			});	
+			
+		}else {
+			res.render('addPost', {page: {title: "Title is empty", content: "Add a new post"}});	
+		}
+	}
+	else{
+		getAllPosts(function(data){
+			console.log(data);
+			res.render('blogposts', {page: {title: "Posts" }, blogposts: data});
+		});
+		
+	}
+	
 });
 
 app.get('/blog', function (req, res) {
