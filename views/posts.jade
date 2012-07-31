@@ -9,6 +9,4 @@ include header
 						.span6
 							h2.blog-title=post.title
 							div.blog-text=post.content
-							a.btn.btn-small.btn-danger(href="?action=delete&post_id=#{post._id}") Delete post
-							
-							p= locals.url
+							a.btn.btn-small.btn-danger(href="#{locals.host}#{locals.url}?action=delete&post_id=#{post._id}") Delete post

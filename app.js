@@ -21,6 +21,10 @@ app.configure(function () {
 		res.locals.url = req.url;
 		next();
 	});
+	app.use(function(req, res, next){
+		res.locals.host = 'http://' + req.headers.host;
+		next();
+	});
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(express.cookieParser());
