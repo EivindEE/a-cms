@@ -123,9 +123,7 @@ function getAllPosts($cb){
 // Routes
 
 app.get('/',function(req, res){
-	getTitleBySlug('myfirstpost', function(data) { 
-		res.render('index', {page: data});
-	})
+	res.redirect('/blog/');
 });
 
 // Save New Post
