@@ -144,9 +144,17 @@ app.get('/admin/posts',function(req, res){
 			res.render('addPost', {page: {title: "Title is empty", content: "Add a new post"}});	
 		}
 	}
+	else if(req.query.action === "delete"){
+		 
+			post.remove({_id: req.query.post_id}, function(err) { 
+				getAllPosts(function(data){
+					res.render('posts', {warning: "The post was deleted.", page: {title: "Posts" }, blogposts: data});
+				});
+			});
+	
+	}
 	else{
 		getAllPosts(function(data){
-			console.log(req);
 			res.render('posts', {page: {title: "Posts" }, blogposts: data});
 		});
 		

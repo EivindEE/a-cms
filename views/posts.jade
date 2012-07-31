@@ -2,11 +2,18 @@ include header
 .container
 	.row
 		.span12
+			- if (typeof(warning) != 'undefined')
+				.alert.alert-warning 
+					strong= warning
 			h1=page.title
 			hr
 			for post in blogposts
 				.row
 					.span6
-						h2.blog-title=post.title
+						h3.blog-title=post.title
 						div.blog-text=post.content
+						br
+				.row
+					.span6
 						a.btn.btn-small.btn-danger(href="#{locals.host}#{locals.url}?action=delete&post_id=#{post._id}") Delete post
+				hr
