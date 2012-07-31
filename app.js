@@ -119,6 +119,8 @@ app.get('/',function(req, res){
 		res.render('index', {page: data});
 	})
 });
+
+// Save New Post
 app.post('/admin/posts/addnewtodb', function(req, res){
 	if (req.body.title !== ""){
 			var instance = new post();
@@ -140,6 +142,7 @@ app.post('/admin/posts/addnewtodb', function(req, res){
 		}
 });
 
+//Delete Post by ID
 app.post('/admin/posts/delete', function(req, res){
 	console.log(req.body);
 	post.remove({_id: req.body.post_id}, function(err) { 
@@ -152,11 +155,37 @@ app.post('/admin/posts/delete', function(req, res){
 	});
 });
 
+//Add New Post
 app.get('/admin/posts/addnew', function(req, res){
 	res.render('addPost', {page: {title: "Add New Post", content: "Add a new post"}});
 });
 
+//Edit Post
+app.get('/admin/posts/edit', function(req, res){
+	post.findOne({_id: req.query.post_id}, function(err, data){
+		console.log(data);
+		res.render('editPost', {page: {title: "Edit Post", content: "Edit the post"}, post: data});
+	});
+});
 
+//Save Edited Post
+app.post('/admin/posts/edit/save', function(req, res){
+	post.findOne({_id: req.body.post_id}, function(err, data){
+		data.title = req.body.title;
+		data.slug = req.body.slug;
+		data.content = req.body.content;
+		
+		data.save(function (err) {
+			if (!err){
+				res.redirect('admin/posts/edit?post_id='+req.body.post_id+'&warning=The post was successfully updated!');	
+			}
+			else{
+				res.redirect('admin/posts/edit?post_id='+req.body.post_id+'&warning=Could not save post! Error:' + err);
+			}
+		});	
+	});
+});
+// Show all Posts
 app.get('/admin/posts',function(req, res){
 	getAllPosts(function(data){
 		res.render('posts', {page: {title: "Posts" }, blogposts: data});
