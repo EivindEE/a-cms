@@ -4,7 +4,7 @@ include header
 			.span12
 				h1= page.title
 				p= page.content
-				form(action="")
+				form(action="/", method="post")
 					input(type="hidden")(value="writetodb")(name="action")
 					label Title
 					input(type="text")(name="title")

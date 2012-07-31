@@ -1,0 +1,14 @@
+include header
+	.container
+		.row
+			.span12
+				h1=page.title
+				hr
+				for post in blogposts
+					.row
+						.span6
+							h2.blog-title=post.title
+							div.blog-text=post.content
+							a.btn.btn-small.btn-danger(href="?action=delete&post_id=#{post._id}") Delete post
+							
+							p= locals.url

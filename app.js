@@ -6,7 +6,7 @@
 var express = require('express')
 ,	app = module.exports = express.createServer()
 ,	mongoose = require('mongoose')
-,	db = mongoose.connect('mongodb://localhost/nodeblog')
+,	db = mongoose.connect('mongodb://localhost/acms')
 ,	Schema = mongoose.Schema
 ,	ObjectId = Schema.ObjectId;
 
@@ -17,6 +17,10 @@ app.configure(function () {
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'jade');
 	app.use(express.logger('dev'));
+	app.use(function(req, res, next){
+		res.locals.url = req.url;
+		next();
+	});
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(express.cookieParser());
@@ -34,6 +38,8 @@ app.configure('production', function () {
     'use strict';
 	app.use(express.errorHandler());
 });
+
+
 
 //Define schemas
 var pages = new Schema({
@@ -135,8 +141,8 @@ app.get('/admin/posts',function(req, res){
 	}
 	else{
 		getAllPosts(function(data){
-			console.log(data);
-			res.render('blogposts', {page: {title: "Posts" }, blogposts: data});
+			console.log(req);
+			res.render('posts', {page: {title: "Posts" }, blogposts: data});
 		});
 		
 	}
