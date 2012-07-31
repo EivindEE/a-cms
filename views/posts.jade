@@ -2,9 +2,9 @@ include header
 .container
 	.row
 		.span12
-			- if (typeof(warning) != 'undefined')
+			- if (typeof(locals.query.warning) != 'undefined')
 				.alert.alert-warning 
-					strong= warning
+					strong= locals.query.warning
 			h1=page.title
 			hr
 			for post in blogposts
@@ -15,5 +15,7 @@ include header
 						br
 				.row
 					.span6
-						a.btn.btn-small.btn-danger(href="#{locals.host}#{locals.url}?action=delete&post_id=#{post._id}") Delete post
+						form(action="#{locals.host}/admin/posts/delete", method="post")
+							input(type="hidden", name="post_id", value=post._id)
+							input.btn.btn-small.btn-danger(type="submit", value="Delete Post")
 				hr

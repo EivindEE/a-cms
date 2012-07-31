@@ -119,47 +119,48 @@ app.get('/',function(req, res){
 		res.render('index', {page: data});
 	})
 });
-
-app.get('/admin/posts',function(req, res){
-	console.log(req.query);
-	if(req.query.action === "addnew"){
-		res.render('addPost', {page: {title: "Add New Post", content: "Add a new post"}});	
-	} else if(req.query.action === "writetodb"){
-		if (req.query.title !== ""){
+app.post('/admin/posts/addnewtodb', function(req, res){
+	if (req.body.title !== ""){
 			var instance = new post();
-			instance.title = req.query.title;
-			instance.slug = req.query.slug;
-			instance.content = req.query.content;
+			instance.title = req.body.title;
+			instance.slug = req.body.slug;
+			instance.content = req.body.content;
 			instance.type = "post";
 			instance.save(function (err) {
 				if (!err){
-					res.render('addPost', {page: {title: "Post Added", content: "Add a new post"}});	
+					res.redirect('admin/posts/addnew?warning=The post was successfully created!');	
 				}
 				else{
-					res.render('addPost', {page: {title: "Error", content: "Could not add post"}});
+					res.redirect('admin/posts/addnew?warning=Could not create post!');
 				}
 			});	
 			
 		}else {
-			res.render('addPost', {page: {title: "Title is empty", content: "Add a new post"}});	
+			res.redirect('admin/posts/addnew?warning=Missing title!');
 		}
-	}
-	else if(req.query.action === "delete"){
-		 
-			post.remove({_id: req.query.post_id}, function(err) { 
-				getAllPosts(function(data){
-					res.render('posts', {warning: "The post was deleted.", page: {title: "Posts" }, blogposts: data});
-				});
-			});
-	
-	}
-	else{
-		getAllPosts(function(data){
-			res.render('posts', {page: {title: "Posts" }, blogposts: data});
-		});
-		
-	}
-	
+});
+
+app.post('/admin/posts/delete', function(req, res){
+	console.log(req.body);
+	post.remove({_id: req.body.post_id}, function(err) { 
+		if(!err){
+			res.redirect('admin/posts?warning=The Post was deleted');	
+		}
+		else{
+			res.redirect('admin/posts?warning=Could not delete post. Error: '+err);
+		}
+	});
+});
+
+app.get('/admin/posts/addnew', function(req, res){
+	res.render('addPost', {page: {title: "Add New Post", content: "Add a new post"}});
+});
+
+
+app.get('/admin/posts',function(req, res){
+	getAllPosts(function(data){
+		res.render('posts', {page: {title: "Posts" }, blogposts: data});
+	});
 });
 
 app.get('/blog', function (req, res) {

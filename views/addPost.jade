@@ -2,10 +2,12 @@ include header
 .container
 	.row
 		.span12
+			- if (typeof(locals.query.warning) != 'undefined')
+				.alert.alert-warning 
+					strong= locals.query.warning
 			h1= page.title
 			p= page.content
-			form(action="")
-				input(type="hidden")(value="writetodb")(name="action")
+			form(action="#{locals.host}/admin/posts/addnewtodb", method="post")
 				
 				label Title
 				input(type="text")(name="title")
