@@ -12,8 +12,6 @@ var express = require('express')
 
 // Configuration
 
-var MemStore = express.session.MemoryStore;
-
 app.configure(function () {
     'use strict';
 	app.set('views', __dirname + '/views');
@@ -31,7 +29,7 @@ app.configure(function () {
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(express.cookieParser());
-	app.use(express.session({ store: MemStore( { reapInterval: 60000 * 10 }), secret: 'microrcim' }));
+	app.use(express.session({ secret: 'your secret goes here' }));
 	app.use(app.router);
 	app.use(express.static(__dirname + '/public'));
 });
@@ -45,17 +43,6 @@ app.configure('production', function () {
     'use strict';
 	app.use(express.errorHandler());
 });
-
-
-//Middleware
-	
-	function requiresLogin(req, res, next){
-		if(req.session.user){
-			next();
-		}else {
-			res.redirect('/login?reddir=' + req.url);
-		}
-	}
 
 
 
@@ -133,38 +120,14 @@ function getAllPosts($cb){
 }
 
 
-
 // Routes
-
-	
-	//Sessions
-	
-	var users = require('./users');
-	
-	app.get('/login',function(req, res){
-		res.render('login', {page: {title: 'Login'}});
-	});
-	
-	app.post('/sessions',function(req, res){
-		users.authenticate(req.body.user, req.body.password, function(user){
-			if(user){
-				req.session.user = user;
-				res.redirect(req.body.redir || '/'); 
-			} else {
-				res.redirect('/login?redir='+req.query.redir);
-			}
-		});
-	
-	});
-
 
 app.get('/',function(req, res){
 	res.redirect('/blog/');
 });
 
-
 // Save New Post
-app.post('/admin/posts/addnewtodb', requiresLogin, function(req, res){
+app.post('/admin/posts/addnewtodb', function(req, res){
 	if (req.body.title !== ""){
 			var instance = new post();
 			instance.title = req.body.title;
@@ -186,7 +149,7 @@ app.post('/admin/posts/addnewtodb', requiresLogin, function(req, res){
 });
 
 //Delete Post by ID
-app.post('/admin/posts/delete', requiresLogin, function(req, res){
+app.post('/admin/posts/delete', function(req, res){
 	console.log(req.body);
 	post.remove({_id: req.body.post_id}, function(err) { 
 		if(!err){
@@ -199,12 +162,12 @@ app.post('/admin/posts/delete', requiresLogin, function(req, res){
 });
 
 //Add New Post
-app.get('/admin/posts/addnew', requiresLogin, function(req, res){
+app.get('/admin/posts/addnew', function(req, res){
 	res.render('addPost', {page: {title: "Add New Post", content: "Add a new post"}});
 });
 
 //Edit Post
-app.get('/admin/posts/edit', requiresLogin, function(req, res){
+app.get('/admin/posts/edit', function(req, res){
 	post.findOne({_id: req.query.post_id}, function(err, data){
 		console.log(data);
 		res.render('editPost', {page: {title: "Edit Post", content: "Edit the post"}, post: data});
@@ -212,7 +175,7 @@ app.get('/admin/posts/edit', requiresLogin, function(req, res){
 });
 
 //Save Edited Post
-app.post('/admin/posts/edit/save', requiresLogin, function(req, res){
+app.post('/admin/posts/edit/save', function(req, res){
 	post.findOne({_id: req.body.post_id}, function(err, data){
 		data.title = req.body.title;
 		data.slug = req.body.slug;
@@ -229,7 +192,7 @@ app.post('/admin/posts/edit/save', requiresLogin, function(req, res){
 	});
 });
 // Show all Posts
-app.get('/admin/posts', requiresLogin, function(req, res){
+app.get('/admin/posts',function(req, res){
 	getAllPosts(function(data){
 		res.render('posts', {page: {title: "Posts" }, blogposts: data});
 	});
