@@ -1,0 +1,13 @@
+include header
+.container
+	.row
+		.span4.offset4
+			form(action="/sessions", method="post").well
+				h3=page.title
+				hr
+				input(type="hidden", name="redir", val=locals.query.redir)
+				label(for="username") Username
+				input(type="text", name="user")
+				label(for="password") Password
+				input(type="password", name="password")
+				input(type="submit", value="Login").btn.btn-primary.btn-large
