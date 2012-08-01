@@ -143,7 +143,7 @@ app.post('/admin/posts/addnewtodb', function(req, res){
 					res.redirect('admin/posts/addnew?warning=The post was successfully created!');	
 				}
 				else{
-					res.redirect('admin/posts/addnew?warning=Could not create post!');
+					res.redirect('admin/posts/addnew?warning=Could not create post! Error:'+ err);
 				}
 			});	
 			

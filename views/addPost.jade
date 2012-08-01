@@ -10,10 +10,11 @@ include header
 			form(action="#{locals.host}/admin/posts/addnewtodb", method="post")
 				
 				label Title
-				input(type="text")(name="title")
-				
-				label Slug
-				input(type="text")(name="slug")
+				input#title(type="text")(name="title")
+				br
+				span#slug
+					p.left #{locals.host}/blog/
+					input.slug(type="text", name="slug")
 				
 				br
 				label Content
