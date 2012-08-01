@@ -6,7 +6,7 @@
 var express = require('express')
 ,	app = module.exports = express.createServer()
 ,	mongoose = require('mongoose')
-,	db = mongoose.connect('mongodb://localhost/acms')
+,	db = mongoose.connect('mongodb://spoeken:by-ge@ds033457.mongolab.com:33457/acms')
 ,	Schema = mongoose.Schema
 ,	ObjectId = Schema.ObjectId;
 
@@ -29,7 +29,7 @@ app.configure(function () {
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(express.cookieParser());
-	app.use(express.session({ secret: 'your secret goes here' }));
+	//app.use(express.session({ secret: 'your secret goes here' }));
 	app.use(app.router);
 	app.use(express.static(__dirname + '/public'));
 });
