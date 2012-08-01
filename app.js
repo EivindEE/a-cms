@@ -130,27 +130,9 @@ app.get('/login',function(req, res){
 	res.render('login', {page: {title:"Login"}});
 });
 
-// Save New Post
-app.post('/admin/posts/addnewtodb', function(req, res){
-	if (req.body.title !== ""){
-			var instance = new post();
-			instance.title = req.body.title;
-			instance.slug = req.body.slug;
-			instance.content = req.body.content;
-			instance.type = "post";
-			instance.save(function (err) {
-				if (!err){
-					res.redirect('admin/posts/addnew?warning=The post was successfully created!');	
-				}
-				else{
-					res.redirect('admin/posts/addnew?warning=Could not create post! Error:'+ err);
-				}
-			});	
-			
-		}else {
-			res.redirect('admin/posts/addnew?warning=Missing title!');
-		}
-});
+/*----------------------------/
+	DELETE
+---------------------------*/
 
 //Delete Post by ID
 app.post('/admin/posts/delete', function(req, res){
@@ -165,10 +147,41 @@ app.post('/admin/posts/delete', function(req, res){
 	});
 });
 
+/*----------------------------/
+	CREATE
+---------------------------*/
+
 //Add New Post
 app.get('/admin/posts/addnew', function(req, res){
 	res.render('addPost', {page: {title: "Add New Post", content: "Add a new post"}});
 });
+
+// Save New Post
+app.post('/admin/posts/addnewtodb', function(req, res){
+	if (req.body.title !== ""){
+			var instance = new post();
+			instance.title = req.body.title;
+			instance.slug = req.body.slug;
+			instance.content = req.body.content;
+			instance.type = "post";
+			instance.date = new Date();
+			instance.save(function (err) {
+				if (!err){
+					res.redirect('admin/posts/addnew?warning=The post was successfully created!');	
+				}
+				else{
+					res.redirect('admin/posts/addnew?warning=Could not create post! Error:'+ err);
+				}
+			});	
+			
+		}else {
+			res.redirect('admin/posts/addnew?warning=Missing title!');
+		}
+});
+
+/*----------------------------/
+	UPDATE
+---------------------------*/
 
 //Edit Post
 app.get('/admin/posts/edit', function(req, res){
@@ -195,6 +208,11 @@ app.post('/admin/posts/edit/save', function(req, res){
 		});	
 	});
 });
+
+/*----------------------------/
+	READ
+---------------------------*/
+
 // Show all Posts
 app.get('/admin/posts',function(req, res){
 	getAllPosts(function(data){
