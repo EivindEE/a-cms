@@ -10,8 +10,8 @@ include header
 			for post in blogposts
 				.row
 					.span6
-						h3.blog-title=post.title
-						div.blog-text=post.content
+						h3= post.title
+						div!= post.content
 						br
 				.row
 					.span1

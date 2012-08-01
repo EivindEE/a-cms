@@ -126,6 +126,10 @@ app.get('/',function(req, res){
 	res.redirect('/blog/');
 });
 
+app.get('/login',function(req, res){
+	res.render('login', {page: {title:"Login"}});
+});
+
 // Save New Post
 app.post('/admin/posts/addnewtodb', function(req, res){
 	if (req.body.title !== ""){

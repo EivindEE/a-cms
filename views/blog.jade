@@ -9,6 +9,7 @@ include header
 					.span6
 						h3.blog-title
 							a(href="#{locals.host}/blog/#{post.slug}")=post.title
-						div.blog-text=post.content
+						div.blog-text
+							div!=post.content
 						br
 				hr
