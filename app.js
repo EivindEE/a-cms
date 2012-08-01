@@ -45,60 +45,21 @@ app.configure('production', function () {
 });
 
 
-
-//Define schemas
-var pages = new Schema({
-    author	: ObjectId
-  , title	: String
-  , slug	: String
-  , content	: String
-  , type	: String
-  , buf		: Buffer	//Don't know how this works
-  , date	: Date	//Don't know how this works
-});
-
-var page = db.model('pages', pages);
-
 var posts = new Schema({
     author	: ObjectId
   , title	: String
   , slug	: String
   , content	: String
   , type	: String
-  , buf		: Buffer	//Don't know how this works
-  , date	: Date	//Don't know how this works
+  , buf		: Buffer
+  , date	: Date
 });
 
 var post = db.model('post', posts);
 
-// Database Functions
-
-function createNewPage(){
-	var instance = new page();
-	instance.title = 'This is a post';
-	instance.slug = "myfirstpost";
-	instance.content = "Proin vestibulum. Ut ligula. Nullam sed dolor id odio volutpat pulvinar. Integer a leo. In et eros at neque pretium sagittis. Sed sodales lorem a ipsum suscipit gravida. Ut fringilla placerat arcu. Phasellus imperdiet. Mauris ac justo et turpis pharetra vulputate";
-	
-	instance.save(function (err) {
-		if (!err){
-			 console.log('Instance saved. Title:'+ instance.title);	
-		}
-		else{
-			 console.log('Could not save instance. Error: '+ err);	
-		}
-	});		
-}
-	
-//createNewPage();
-
-
-function getTitleBySlug($slug, $cb){
-	page.find({slug: $slug}, function(err, data) {
-	  	data.forEach(function(elem, index, array){
-		  	$cb(elem); 
-	  	});
-	});	
-}
+/*----------------------------/
+	READ FUNCTIONS
+---------------------------*/
 
 function getPostBySlug($slug, $cb){
 	post.find({slug: $slug}, function(err, data) {
@@ -210,7 +171,7 @@ app.post('/admin/posts/edit/save', function(req, res){
 });
 
 /*----------------------------/
-	READ
+	READ ROUTES
 ---------------------------*/
 
 // Show all Posts
