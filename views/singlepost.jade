@@ -8,7 +8,10 @@ include header
 					strong Posted
 					i=page.date
 				p!=page.content
-				#disqus_thread
+				
+		.span6.offset3
+			.margin-40
+			#disqus_thread
 			script(type="text/javascript)
 				/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
 				var disqus_shortname = 'acms'; // required: replace example with your forum shortname
@@ -19,5 +22,6 @@ include header
 					dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
 					(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 				})();
-				noscript Please enable JavaScript to view the 
-				a(href="http://disqus.com/?ref_noscript")comments powered by Disqus.
+			
+			noscript Please enable JavaScript to view the 
+			a(href="http://disqus.com/?ref_noscript")comments powered by Disqus.
