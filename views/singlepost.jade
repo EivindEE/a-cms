@@ -4,5 +4,8 @@ include header
 		.span12
 		
 				h1=page.title
-				p=page.content
+				p
+					strong Posted
+					i=page.date
+				p!=page.content
 				
