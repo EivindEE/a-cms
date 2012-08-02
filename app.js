@@ -166,7 +166,7 @@ app.post('/login',
 ---------------------------*/
 
 //Delete Post by ID
-app.post('/admin/posts/delete', function(req, res){
+app.post('/admin/posts/delete', ensureAuthenticated, function(req, res){
 	console.log(req.body);
 	post.remove({_id: req.body.post_id}, function(err) { 
 		if(!err){
@@ -183,12 +183,12 @@ app.post('/admin/posts/delete', function(req, res){
 ---------------------------*/
 
 //Add New Post
-app.get('/admin/posts/addnew', function(req, res){
+app.get('/admin/posts/addnew', ensureAuthenticated, function(req, res){
 	res.render('addPost', {page: {title: "Add New Post", content: "Add a new post"}});
 });
 
 // Save New Post
-app.post('/admin/posts/addnewtodb', function(req, res){
+app.post('/admin/posts/addnewtodb', ensureAuthenticated, function(req, res){
 	if (req.body.title !== ""){
 			var instance = new post();
 			instance.title = req.body.title;
@@ -215,7 +215,7 @@ app.post('/admin/posts/addnewtodb', function(req, res){
 ---------------------------*/
 
 //Edit Post
-app.get('/admin/posts/edit', function(req, res){
+app.get('/admin/posts/edit', ensureAuthenticated, function(req, res){
 	post.findOne({_id: req.query.post_id}, function(err, data){
 		console.log(data);
 		res.render('editPost', {page: {title: "Edit Post", content: "Edit the post"}, post: data});
@@ -223,7 +223,7 @@ app.get('/admin/posts/edit', function(req, res){
 });
 
 //Save Edited Post
-app.post('/admin/posts/edit/save', function(req, res){
+app.post('/admin/posts/edit/save', ensureAuthenticated, function(req, res){
 	post.findOne({_id: req.body.post_id}, function(err, data){
 		data.title = req.body.title;
 		data.slug = req.body.slug;
