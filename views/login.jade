@@ -2,7 +2,13 @@ include header
 .container
 	.row
 		.span4.offset4
-			form(action="/sessions", method="post").well
+			- if (typeof(locals.query.warning) != 'undefined')
+				.alert.alert-warning 
+					strong= locals.query.warning
+			- if (typeof(locals.query.error) != 'undefined')
+				.alert.alert-error 
+					strong= locals.query.error
+			form(action="/login", method="post").well
 				h3=page.title
 				hr
 				label(for="username") Username

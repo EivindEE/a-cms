@@ -156,7 +156,7 @@ app.get('/login',function(req, res){
 });
 
 app.post('/login', 
-	passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
+	passport.authenticate('local', { failureRedirect: '/login?error=Username and/or password incorrect', failureFlash: false }),
 	function(req, res) {
 		res.redirect('/admin/posts');
 });
@@ -276,6 +276,6 @@ console.log('Express server listening on port %d in %s mode', port, app.settings
 //   login page.
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login')
+  res.redirect('/login?warning=You have to be logged in to access that area')
 }
 
