@@ -4,6 +4,7 @@ include header
 		.span12
 			h1=page.title
 			hr
+			- blogposts.sort(byDateASC)
 			for post in blogposts
 				.row
 					.span8
