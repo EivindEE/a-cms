@@ -6,11 +6,14 @@ include header
 				.alert.alert-warning 
 					strong= locals.query.warning
 			h1=page.title
+			a.btn.btn-white(href="/admin/posts/addnew") Add new Post
 			hr
 			for post in blogposts
 				.row
 					.span6
 						h3= post.title
+						p
+							i posted #{post.date}
 						div!= post.content
 						br
 				.row

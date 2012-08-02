@@ -1,12 +1,14 @@
 include header
 .container
 	.row
+		
 		.span12
+			h1= page.title
+			hr
+		.span8
 			- if (typeof(locals.query.warning) != 'undefined')
 				.alert.alert-warning 
 					strong= locals.query.warning
-			h1= page.title
-			p= page.content
 			form(action="#{locals.host}/admin/posts/edit/save", method="post")
 				input(type="hidden", name="post_id", value=locals.query.post_id)
 				label Title
@@ -21,4 +23,13 @@ include header
 				textarea.redactor(name="content")=post.content
 				br
 
-				input.btn(type="submit")
+				input.btn#submit(type="submit").hidden
+		.span4
+			.well
+				a.btn.btn-success(onClick="$('#submit').click();", href="#") Publish
+				|&nbsp;&nbsp;&nbsp;
+				a.btn.btn-danger Delete
+				hr
+				p 
+					strong Published 
+					= post.date

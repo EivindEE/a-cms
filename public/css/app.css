@@ -18,7 +18,8 @@ body {
 }
 #slug input:focus {
   border: 1px solid #ccc;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+}
+/* MISC */
+.hidden {
+  display: none;
 }

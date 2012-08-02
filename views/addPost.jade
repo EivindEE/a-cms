@@ -6,7 +6,9 @@ include header
 				.alert.alert-warning 
 					strong= locals.query.warning
 			h1= page.title
-			p= page.content
+			hr
+	.row
+		.span8
 			form(action="#{locals.host}/admin/posts/addnewtodb", method="post")
 				
 				label Title
@@ -21,4 +23,7 @@ include header
 				textarea.redactor(name="content")
 				br
 
-				input.btn(type="submit")
+				input.btn#submit(type="submit").hidden
+		.span4
+			.well
+				a.btn.btn-green(onClick="$('#submit').click();", href="#") Publish
