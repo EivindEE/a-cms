@@ -245,7 +245,7 @@ app.post('/admin/posts/edit/save', ensureAuthenticated, function(req, res){
 ---------------------------*/
 
 // Show all Posts
-app.get('/admin/posts',function(req, res){
+app.get('/admin/posts', ensureAuthenticated, function(req, res){
 	getAllPosts(function(data){
 		res.render('posts', {page: {title: "Posts" }, blogposts: data});
 	});
