@@ -9,6 +9,9 @@ include header
 					.span8
 						h3.blog-title
 							a(href="#{locals.host}/blog/#{post.slug}")=post.title
+						p 
+							b Posted 
+							i=post.date.toDateString()
 						div.blog-text
 							div!=post.content
 						br

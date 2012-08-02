@@ -14,13 +14,11 @@ include header
 						h3= post.title
 						p
 							i posted #{post.date}
-						br
 					.margin-10
 					.span1
 						form(action="#{locals.host}/admin/posts/edit", method="get")
 							input(type="hidden", name="post_id", value=post._id)
 							input.btn.btn-small.btn-warning(type="submit", value="Edit Post")
-					.margin-10
 					.span1	
 						form(action="#{locals.host}/admin/posts/delete", method="post")
 							input(type="hidden", name="post_id", value=post._id)
