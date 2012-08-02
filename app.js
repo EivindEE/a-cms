@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -8,7 +7,61 @@ var express = require('express')
 ,	mongoose = require('mongoose')
 ,	db = mongoose.connect('mongodb://spoeken:by-ge@ds033457.mongolab.com:33457/acms')
 ,	Schema = mongoose.Schema
-,	ObjectId = Schema.ObjectId;
+,	ObjectId = Schema.ObjectId
+,	passport = require('passport')
+,	LocalStrategy = require('passport-local').Strategy;
+
+
+//Passport
+
+var users = [
+	{ id: 1, username: 'mathias', password: 'hemmelig', email: 'bob@example.com' }
+,	{ id: 2, username: 'eivind', password: 'hemmelig', email: 'joe@example.com' }
+];
+
+function findById(id, fn) {
+	var idx = id - 1;
+	if (users[idx]) {
+		fn(null, users[idx]);
+	} else {
+		fn(new Error('User ' + id + ' does not exist'));
+	}
+}
+
+function findByUsername(username, fn) {
+	for (var i = 0, len = users.length; i < len; i++) {
+		var user = users[i];
+		if (user.username === username) {
+			return fn(null, user);
+		}
+	}
+	return fn(null, null);
+}
+
+passport.serializeUser(function(user, done) {
+	done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+	findById(id, function (err, user) {
+		done(err, user);
+	});
+});
+
+passport.use(new LocalStrategy(
+	function(username, password, done) {
+		// asynchronous verification, for effect...
+		process.nextTick(function () {
+			findByUsername(username, function(err, user) {
+				if (err) { return done(err); }
+				if (!user) { return done(null, false, { message: 'Unknown user ' + username }); }
+				if (user.password != password) { return done(null, false, { message: 'Invalid password' }); }
+				return done(null, user);
+			})
+		});
+	}
+));
+
 
 // Configuration
 
@@ -26,10 +79,12 @@ app.configure(function () {
 		res.locals.query = req.query;
 		next();
 	});
+	app.use(express.cookieParser());
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
-	app.use(express.cookieParser());
-	//app.use(express.session({ secret: 'your secret goes here' }));
+	app.use(express.session({ secret: 'keyboard cat' }));
+	app.use(passport.initialize());
+	app.use(passport.session());
 	app.use(app.router);
 	app.use(express.static(__dirname + '/public'));
 });
@@ -87,8 +142,23 @@ app.get('/',function(req, res){
 	res.redirect('/blog/');
 });
 
+/*----------------------------/
+	LOGIN LOGOUT
+---------------------------*/
+
+app.get('/logout', function(req, res){
+	req.logout();
+	res.redirect('/');
+});
+
 app.get('/login',function(req, res){
 	res.render('login', {page: {title:"Login"}});
+});
+
+app.post('/login', 
+	passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
+	function(req, res) {
+		res.redirect('/admin/posts');
 });
 
 /*----------------------------/
@@ -198,4 +268,14 @@ app.get('/blog/:slug', function(req, res){
 var port = process.env.PORT || 20095;
 app.listen(port);
 console.log('Express server listening on port %d in %s mode', port, app.settings.env);
+
+// Simple route middleware to ensure user is authenticated.
+//   Use this route middleware on any resource that needs to be protected.  If
+//   the request is authenticated (typically via a persistent login session),
+//   the request will proceed.  Otherwise, the user will be redirected to the
+//   login page.
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/login')
+}
 
