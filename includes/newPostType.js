@@ -27,7 +27,7 @@ addNewPostType = function(settings){
 	//Delete Post by ID
 	app.post('/admin/'+settings.labels.plural+'/delete', ensureAuthenticated, function(req, res){
 		console.log(req.body);
-		post.remove({_id: req.body.post_id}, function(err) { 
+		postType.remove({_id: req.body.post_id}, function(err) { 
 			if(!err){
 				res.redirect('admin/'+settings.labels.plural+'?warning=The Post was deleted');	
 			}
