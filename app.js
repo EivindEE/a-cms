@@ -16,6 +16,8 @@ function include(file){
 	eval(fs.readFileSync(file)+'');
 }
 
+include('./includes/newPostType.js');
+
 //Passport
 
 var users = [
@@ -123,8 +125,9 @@ function getPostBySlug(postType, $slug, $cb){
 	});	
 }
 
-function getAllPosts(fart, $cb){
-	fart.find({post_type: global[fart]}, function(err, data) {
+function getAllPosts(postType, type, $cb){
+	console.log(postType+"/"+type);
+	postType.find({type: type}, function(err, data) {
 		if(!err){
 			$cb(data);  
 		}	
@@ -160,7 +163,9 @@ app.post('/login',
 		res.redirect('/admin/posts');
 });
 
-include('./includes/newPostType.js');
+/*----------------------------/
+	Post Types
+---------------------------*/
 
 addNewPostType({
 	slug: "blog"

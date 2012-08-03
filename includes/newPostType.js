@@ -18,7 +18,7 @@ addNewPostType = function(settings){
 	  , date	: Date
 	});
 	
-	postType = db.model(settings.labels.singular, global[settings.labels.plural]);
+	var postType = db.model(settings.labels.singular, global[settings.labels.plural]);
 	
 	/*----------------------------/
 		DELETE
@@ -53,10 +53,11 @@ addNewPostType = function(settings){
 				instance.title = req.body.title;
 				instance.slug = req.body.slug;
 				instance.content = req.body.content;
-				instance.type = "post";
+				instance.type = settings.labels.plural;
 				instance.date = new Date();
 				instance.save(function (err) {
 					if (!err){
+						console.log(instance.type);
 						res.redirect('admin/'+settings.labels.plural+'/addnew?warning=The '+settings.labels.singular+' was successfully created!');	
 					}
 					else{
@@ -105,13 +106,13 @@ addNewPostType = function(settings){
 	
 	// Show all Posts
 	app.get('/admin/'+settings.labels.plural, ensureAuthenticated, function(req, res){
-		getAllPosts(postType, function(data){
+		getAllPosts(postType, settings.labels.plural, function(data){
 			res.render('posts', {page: {title: settings.labels.plural }, blogposts: data});
 		});
 	});
 	
 	app.get('/'+settings.slug, function (req, res) {
-	    getAllPosts(postType, function(data){
+	    getAllPosts(postType, settings.labels.plural, function(data){
 			res.render('blog', {page: {title: settings.labels.plural, header: "Welcome to the a-cms blog. It is super effective at teaching you how to use a-cms" }, blogposts: data});
 		});
 	});
