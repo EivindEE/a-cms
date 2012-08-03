@@ -4,7 +4,7 @@ Post Type Module
 	
 */
 
-exports.addNew = function(app, db, Schema, ObjectId, ensureAuthenticated){	
+exports.addNew = function(){	
 	
 	var settings = {
 		slug: "test_type"
