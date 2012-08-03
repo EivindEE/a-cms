@@ -332,7 +332,7 @@ addNewPostType = function(){
 	// Save New Post
 	app.post('/admin/'+settings.labels.plural+'/addnewtodb', ensureAuthenticated, function(req, res){
 		if (req.body.title !== ""){
-				var instance = new global[settings.labels.singular]();
+				var instance = new postType();
 				instance.title = req.body.title;
 				instance.slug = req.body.slug;
 				instance.content = req.body.content;
@@ -395,7 +395,7 @@ addNewPostType = function(){
 	
 	app.get('/'+settings.labels.plural, function (req, res) {
 	    getAllPosts(postType, function(data){
-			res.render('blog', {page: {title: "a-cms blog", header: "Welcome to the a-cms blog. It is super effective at teaching you how to use a-cms" }, blogposts: data});
+			res.render('blog', {page: {title: settings.labels.plural, header: "Welcome to the a-cms blog. It is super effective at teaching you how to use a-cms" }, blogposts: data});
 		});
 	});
 	
@@ -408,7 +408,7 @@ addNewPostType = function(){
 	});
 }
 
-addNewPostType(Schema); //WHy do I have to send Schema with it?
+addNewPostType();
 
 
 var port = process.env.PORT || 20095;

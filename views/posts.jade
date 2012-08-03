@@ -6,7 +6,7 @@ include header
 				.alert.alert-warning 
 					strong= locals.query.warning
 			h1=page.title
-			a.btn.btn-white(href="/admin/posts/addnew") Add new Post
+			a.btn.btn-white(href="#{locals.url}/addnew") Add new Post
 			hr
 			for post in blogposts
 				.row
@@ -16,11 +16,11 @@ include header
 							i posted #{post.date}
 					.margin-10
 					.span1
-						form(action="#{locals.host}/admin/posts/edit", method="get")
+						form(action="#{locals.url}/edit", method="get")
 							input(type="hidden", name="post_id", value=post._id)
 							input.btn.btn-small.btn-warning(type="submit", value="Edit Post")
 					.span1	
-						form(action="#{locals.host}/admin/posts/delete", method="post")
+						form(action="#{locals.url}/delete", method="post")
 							input(type="hidden", name="post_id", value=post._id)
 							input.btn.btn-small.btn-danger(type="submit", value="Delete Post")
 				hr
