@@ -1,12 +1,19 @@
 {
   "name": "a-cms",
   "description": "A CMS",
-  "author": "@spoeken",
+  "author": "@spoeken", 
+  "contributors" : [{ "name" : "Eivind Elseth"
+                    , "email" : "eivind.elseth@gmail.com    "
+                    , "url" : "https://github.com/EivindEE/"
+                    }],
   "node":"0.6.12",
+  "version": "0.0.1",
   "dependencies": {
     "express": ">= 3.0.x",
     "jade": ">= 0.27.0",
-    "mongoose": ">= 2.7.2"
+    "mongoose": ">= 2.7.2",
+    "passport": ">=0.1.12",
+    "passport-local": "0.1.6"
   },
   "engine": "node 0.6.12"
 }
