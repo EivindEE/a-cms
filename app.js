@@ -9,7 +9,8 @@ var express = require('express')
 ,	Schema = mongoose.Schema
 ,	ObjectId = Schema.ObjectId
 ,	passport = require('passport')
-,	LocalStrategy = require('passport-local').Strategy;
+,	LocalStrategy = require('passport-local').Strategy
+,	postType = require('./acms_modules/post-type');
 
 
 //Passport
@@ -61,6 +62,12 @@ passport.use(new LocalStrategy(
 		});
 	}
 ));
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/login?warning=You have to be logged in to access that area')
+}
+
 
 
 // Configuration
@@ -124,8 +131,8 @@ function getPostBySlug($slug, $cb){
 	});	
 }
 
-function getAllPosts($cb){
-	post.find({type: "post"}, function(err, data) {
+function getAllPosts(postType, $cb){
+	this[postType].find({type: postType}, function(err, data) {
 		if(!err){
 			$cb(data);  
 		}	
@@ -265,6 +272,13 @@ app.get('/blog/:slug', function(req, res){
 	
 });
 
+/*---------------------------------------------------/
+	ADD NEW POST TYPES WITH THE POST TYPE FUNCTION
+---------------------------------------------------*/
+
+postType.addNew(app, db, Schema, ObjectId, ensureAuthenticated);
+
+
 var port = process.env.PORT || 20095;
 app.listen(port);
 console.log('Express server listening on port %d in %s mode', port, app.settings.env);
@@ -274,8 +288,4 @@ console.log('Express server listening on port %d in %s mode', port, app.settings
 //   the request is authenticated (typically via a persistent login session),
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login?warning=You have to be logged in to access that area')
-}
 
