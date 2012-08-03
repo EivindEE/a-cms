@@ -122,8 +122,8 @@ var post = db.model('post', posts);
 	READ FUNCTIONS
 ---------------------------*/
 
-function getPostBySlug($slug, $cb){
-	post.find({slug: $slug}, function(err, data) {
+function getPostBySlug(postType, $slug, $cb){
+	postType.find({slug: $slug}, function(err, data) {
 	  	data.forEach(function(elem, index, array){
 		  	$cb(elem); 
 	  	});
@@ -167,125 +167,11 @@ app.post('/login',
 		res.redirect('/admin/posts');
 });
 
-/*----------------------------/
-	DELETE
----------------------------*/
-
-//Delete Post by ID
-app.post('/admin/posts/delete', ensureAuthenticated, function(req, res){
-	console.log(req.body);
-	post.remove({_id: req.body.post_id}, function(err) { 
-		if(!err){
-			res.redirect('admin/posts?warning=The Post was deleted');	
-		}
-		else{
-			res.redirect('admin/posts?warning=Could not delete post. Error: '+err);
-		}
-	});
-});
-
-/*----------------------------/
-	CREATE
----------------------------*/
-
-//Add New Post
-app.get('/admin/posts/addnew', ensureAuthenticated, function(req, res){
-	res.render('addPost', {page: {title: "Add New Post", content: "Add a new post"}});
-});
-
-// Save New Post
-app.post('/admin/posts/addnewtodb', ensureAuthenticated, function(req, res){
-	if (req.body.title !== ""){
-			var instance = new post();
-			instance.title = req.body.title;
-			instance.slug = req.body.slug;
-			instance.content = req.body.content;
-			instance.type = "post";
-			instance.date = new Date();
-			instance.save(function (err) {
-				if (!err){
-					res.redirect('admin/posts/addnew?warning=The post was successfully created!');	
-				}
-				else{
-					res.redirect('admin/posts/addnew?warning=Could not create post! Error:'+ err);
-				}
-			});	
-			
-		}else {
-			res.redirect('admin/posts/addnew?warning=Missing title!');
-		}
-});
-
-/*----------------------------/
-	UPDATE
----------------------------*/
-
-//Edit Post
-app.get('/admin/posts/edit', ensureAuthenticated, function(req, res){
-	post.findOne({_id: req.query.post_id}, function(err, data){
-		console.log(data);
-		res.render('editPost', {page: {title: "Edit Post", content: "Edit the post"}, post: data});
-	});
-});
-
-//Save Edited Post
-app.post('/admin/posts/edit/save', ensureAuthenticated, function(req, res){
-	post.findOne({_id: req.body.post_id}, function(err, data){
-		data.title = req.body.title;
-		data.slug = req.body.slug;
-		data.content = req.body.content;
-		
-		data.save(function (err) {
-			if (!err){
-				res.redirect('admin/posts/edit?post_id='+req.body.post_id+'&warning=The post was successfully updated!');	
-			}
-			else{
-				res.redirect('admin/posts/edit?post_id='+req.body.post_id+'&warning=Could not save post! Error:' + err);
-			}
-		});	
-	});
-});
-
-/*----------------------------/
-	READ ROUTES
----------------------------*/
-
-// Show all Posts
-app.get('/admin/posts', ensureAuthenticated, function(req, res){
-	getAllPosts( 'post', function(data){
-		res.render('posts', {page: {title: "Posts" }, blogposts: data});
-	});
-});
-
-app.get('/blog', function (req, res) {
-    getAllPosts( 'post', function(data){
-		res.render('blog', {page: {title: "a-cms blog", header: "Welcome to the a-cms blog. It is super effective at teaching you how to use a-cms" }, blogposts: data});
-	});
-});
-
-//Single Post
-app.get('/blog/:slug', function(req, res){
-	getPostBySlug(req.params.slug, function(data){
-		res.render('singlepost', {page: data});	
-	});
-	
-});
-
 /*---------------------------------------------------/
 	ADD NEW POST POST TYPE FUNCTION
 ---------------------------------------------------*/
 
-addNewPostType = function(){	
-	
-	var settings = {
-		slug: "test_type"
-	,	labels: {
-			plural: "tests"
-		,	singular: "test"
-		}
-	,	archive: true
-		
-	}
+addNewPostType = function(settings){	
 	
 	/*----------------------------/
 		SCHEMA
@@ -358,7 +244,7 @@ addNewPostType = function(){
 	
 	//Edit Post
 	app.get('/admin/'+settings.labels.plural+'/edit', ensureAuthenticated, function(req, res){
-		global[settings.labels.singular].findOne({_id: req.query.post_id}, function(err, data){
+		postType.findOne({_id: req.query.post_id}, function(err, data){
 			console.log(data);
 			res.render('editPost', {page: {title: 'Edit '+settings.labels.singular}, post: data});
 		});
@@ -366,7 +252,7 @@ addNewPostType = function(){
 	
 	//Save Edited Post
 	app.post('/admin/'+settings.labels.plural+'/edit/save', ensureAuthenticated, function(req, res){
-		global[settings.labels.singular].findOne({_id: req.body.post_id}, function(err, data){
+		postType.findOne({_id: req.body.post_id}, function(err, data){
 			data.title = req.body.title;
 			data.slug = req.body.slug;
 			data.content = req.body.content;
@@ -393,7 +279,7 @@ addNewPostType = function(){
 		});
 	});
 	
-	app.get('/'+settings.labels.plural, function (req, res) {
+	app.get('/'+settings.slug, function (req, res) {
 	    getAllPosts(postType, function(data){
 			res.render('blog', {page: {title: settings.labels.plural, header: "Welcome to the a-cms blog. It is super effective at teaching you how to use a-cms" }, blogposts: data});
 		});
@@ -401,14 +287,32 @@ addNewPostType = function(){
 	
 	//Single Post
 	app.get('/'+settings.labels.plural+'/:slug', function(req, res){
-		getPostBySlug(req.params.slug, function(data){
+		getPostBySlug(postType, req.params.slug, function(data){
 			res.render('singlepost', {page: data});	
 		});
 		
 	});
 }
 
-addNewPostType();
+addNewPostType({
+	slug: "blog"
+,	labels: {
+		plural: "Posts"
+	,	singular: "Post"
+	}
+,	archive: true
+	
+});
+
+addNewPostType({
+	slug: "products"
+,	labels: {
+		plural: "products"
+	,	singular: "product"
+	}
+,	archive: true
+	
+});
 
 
 var port = process.env.PORT || 20095;
