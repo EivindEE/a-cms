@@ -1,13 +1,13 @@
 include header
-.container
-	.row
+.container-fluid
+	.row-fluid
 		.span12
 			- if (typeof(locals.query.warning) != 'undefined')
 				.alert.alert-warning 
 					strong= locals.query.warning
 			h1= page.title
 			hr
-	.row
+	.row-fluid
 		.span8
 			form(action="#{locals.url}todb", method="post")
 				

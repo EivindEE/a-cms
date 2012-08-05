@@ -57,7 +57,6 @@ addNewPostType = function(settings){
 				instance.date = new Date();
 				instance.save(function (err) {
 					if (!err){
-						console.log(instance.type);
 						res.redirect('admin/'+settings.labels.plural+'/addnew?warning=The '+settings.labels.singular+' was successfully created!');	
 					}
 					else{
@@ -83,7 +82,7 @@ addNewPostType = function(settings){
 	});
 	
 	//Save Edited Post
-	app.post('/admin/'+settings.labels.plural+'/edit/save', ensureAuthenticated, function(req, res){
+	app.post('/admin/'+settings.labels.plural+'/edit/', ensureAuthenticated, function(req, res){
 		postType.findOne({_id: req.body.post_id}, function(err, data){
 			data.title = req.body.title;
 			data.slug = req.body.slug;

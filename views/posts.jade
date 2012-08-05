@@ -1,6 +1,6 @@
 include header
-.container
-	.row
+.container-fluid
+	.row-fluid
 		.span12
 			- if (typeof(locals.query.warning) != 'undefined')
 				.alert.alert-warning 
@@ -9,7 +9,7 @@ include header
 			a.btn.btn-white(href="#{locals.url}/addnew") Add new Post
 			hr
 			for post in blogposts
-				.row
+				.row-fluid
 					.span6
 						h3= post.title
 						p
