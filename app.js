@@ -10,7 +10,8 @@ var express = require('express')
 ,	ObjectId = Schema.ObjectId
 ,	passport = require('passport')
 ,	LocalStrategy = require('passport-local').Strategy
-,	fs = require('fs');
+,	fs = require('fs')
+,	menu = [];
 
 function include(file){
 	eval(fs.readFileSync(file)+'');
@@ -89,6 +90,7 @@ app.configure(function () {
 	app.use(function(req, res, next){
 		res.locals.host = 'http://' + req.headers.host;
 		res.locals.query = req.query;
+		res.locals.menu = menu;
 		next();
 	});
 	app.use(express.cookieParser());
@@ -141,6 +143,7 @@ function getAllPosts(postType, type, $cb){
 // Routes
 
 app.get('/',function(req, res){
+	console.log(menu);
 	res.redirect('/blog/');
 });
 

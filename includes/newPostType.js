@@ -4,6 +4,18 @@
 
 addNewPostType = function(settings){	
 	
+	
+	/*----------------------------/
+	MENU
+	---------------------------*/
+	
+	menu.push({ 
+		label: settings.labels.plural,
+		links: {
+			addnew: '/admin/'+settings.labels.plural+'/addnew',
+			list: '/admin/'+settings.labels.plural
+		}
+	});
 	/*----------------------------/
 		SCHEMA
 	---------------------------*/
@@ -114,6 +126,7 @@ addNewPostType = function(settings){
 	    getAllPosts(postType, settings.labels.plural, function(data){
 			res.render('blog', {page: {title: settings.labels.plural, header: "Welcome to the a-cms blog. It is super effective at teaching you how to use a-cms" }, blogposts: data});
 		});
+		console.log(menu);
 	});
 	
 	//Single Post
