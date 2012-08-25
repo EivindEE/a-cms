@@ -1,4 +1,4 @@
-a-cms [![Build Status](https://secure.travis-ci.org/eivindee/a.cms.png)](http://travis-ci.org/eivindee/a-cms)
+a-cms [![Build Status](https://secure.travis-ci.org/EivindEE/a-cms.png)](http://travis-ci.org/EivindEE/a-cms)
 ====
 A Node.js based cms
 
